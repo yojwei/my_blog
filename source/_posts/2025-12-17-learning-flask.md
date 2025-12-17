@@ -21,14 +21,6 @@ categories:
 ### Day 1-2：環境設定與 uv 管理
 
 - 安裝 uv 套件管理工具
-
-  ```bash
-  pip install uv
-  uv venv
-  source .venv/bin/activate  # Windows: .venv\Scripts\activate
-  uv pip install flask
-  ```
-
 - 建立 Flask 專案結構
 - 第一個 Hello World 應用程式
 - Git 版本控制初始化
@@ -270,42 +262,8 @@ categories:
 
 ---
 
-## 專案結構
-
-```plain
-weather-app/
-├── app/
-│   ├── __init__.py
-│   ├── models.py
-│   ├── routes.py
-│   ├── forms.py
-│   ├── weather_api.py
-│   ├── static/
-│   │   ├── css/
-│   │   ├── js/
-│   │   └── img/
-│   └── templates/
-│       ├── base.html
-│       ├── index.html
-│       ├── weather.html
-│       ├── profile.html
-│       └── auth/
-├── tests/
-├── migrations/
-├── config.py
-├── requirements.txt
-├── pyproject.toml
-├── Dockerfile
-├── docker-compose.yml
-└── README.md
-```
-
----
-
 **開始日期**：2025-12-17  
 **預計完成**：2026-01-15  
 **每日時間**：2-3 小時
 
 Let's build something amazing! 🌤️
-
-
