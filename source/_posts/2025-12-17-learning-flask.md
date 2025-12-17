@@ -10,7 +10,7 @@ categories:
   - Learning Plan
 ---
 
-## 30 天學習 Flask 計畫：開發 Weather App
+## 專案概述
 
 專案目標：使用 Flask 建立一個功能完整的天氣應用程式，整合天氣 API、資料視覺化與用戶管理功能。
 
@@ -305,4 +305,5 @@ weather-app/
 **每日時間**：2-3 小時
 
 Let's build something amazing! 🌤️
+
 
