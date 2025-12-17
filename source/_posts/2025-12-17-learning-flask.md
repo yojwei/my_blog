@@ -58,6 +58,8 @@ categories:
 
 ---
 
+<!-- more -->
+
 ## 第二週：API 整合與資料處理（Day 8-14）
 
 ### Day 8-9：天氣 API 整合
