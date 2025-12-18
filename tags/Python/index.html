@@ -29,48 +29,9 @@
       switchTab();
       window.addEventListener('hashchange', switchTab, false);
   })();
-  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/my_blog/"><img src="/my_blog/img/logo.svg" alt="大昌的資訊筆記" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/my_blog/">Home</a><a class="navbar-item" href="/my_blog/archives">Archives</a><a class="navbar-item" href="/my_blog/categories">Categories</a><a class="navbar-item" href="/my_blog/tags">Tags</a><a class="navbar-item" href="/my_blog/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yojwei"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜尋" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/my_blog/tags/">標籤</a></li><li class="is-active"><a href="#" aria-current="page">Python</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-12-18T06:39:52.000Z" title="2025/12/18 下午2:39:52">2025-12-18</time>發表</span><span class="level-item"><time dateTime="2025-12-18T07:04:37.337Z" title="2025/12/18 下午3:04:37">2025-12-18</time>更新</span><span class="level-item"><a class="link-muted" href="/my_blog/categories/Learning-Plan/">Learning Plan</a></span><span class="level-item">1 分鐘讀完 (大約209個字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/my_blog/2025/12/2025-12-18-learning-flask-day-01/">Day 01 - 環境設定與 uv 管理</a></p><div class="content"><blockquote>
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/my_blog/"><img src="/my_blog/img/logo.svg" alt="大昌的資訊筆記" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/my_blog/">Home</a><a class="navbar-item" href="/my_blog/archives">Archives</a><a class="navbar-item" href="/my_blog/categories">Categories</a><a class="navbar-item" href="/my_blog/tags">Tags</a><a class="navbar-item" href="/my_blog/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yojwei"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜尋" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/my_blog/tags/">標籤</a></li><li class="is-active"><a href="#" aria-current="page">Python</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-12-18T06:39:52.000Z" title="2025/12/18 下午2:39:52">2025-12-18</time>發表</span><span class="level-item"><time dateTime="2025-12-18T07:07:49.819Z" title="2025/12/18 下午3:07:49">2025-12-18</time>更新</span><span class="level-item"><a class="link-muted" href="/my_blog/categories/Learning-Plan/">Learning Plan</a></span><span class="level-item">1 分鐘讀完 (大約210個字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/my_blog/2025/12/2025-12-18-learning-flask-day-01/">Day 01 - 環境設定與 uv 管理</a></p><div class="content"><blockquote>
 <p>這是 <a href="2025-12-17-learning-flask">30 天學習 Flask 計畫 - Weather App</a> 的 Day 1-2 詳細內容</p>
-</blockquote>
-<h2 id="安裝-uv-套件管理工具"><a href="#安裝-uv-套件管理工具" class="headerlink" title="安裝 uv 套件管理工具"></a>安裝 uv 套件管理工具</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://docs.astral.sh/uv/getting-started/installation/">官方文件</a></li>
-</ul>
-<h3 id="快速安裝-uv"><a href="#快速安裝-uv" class="headerlink" title="快速安裝 uv"></a>快速安裝 uv</h3><ul>
-<li><p><strong>Windows (PowerShell)</strong>:</p>
-  <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powershell <span class="literal">-ExecutionPolicy</span> Bypass <span class="literal">-NoProfile</span> <span class="literal">-Command</span> <span class="string">&quot;irm https://astral.sh/uv/install.ps1 | iex&quot;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>macOS &#x2F; Linux</strong>：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -LsSf https://astral.sh/uv/install.sh | sh</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>驗證安裝：<code>uv --version</code></p>
-</li>
-</ul>
-<h4 id="管理-Python-版本"><a href="#管理-Python-版本" class="headerlink" title="管理 Python 版本"></a>管理 Python 版本</h4><ul>
-<li><code>uv python list</code>：列出可安裝的 Python 版本</li>
-<li><code>uv python install 3.14</code>：安裝 Python 3.14</li>
-</ul>
-<h2 id="建立-Flask-專案結構"><a href="#建立-Flask-專案結構" class="headerlink" title="建立 Flask 專案結構"></a>建立 Flask 專案結構</h2><ul>
-<li><code>uv init flask_demo --python 3.14</code><ul>
-<li>初始化專案</li>
-<li>指定版本為 3.14</li>
-</ul>
-</li>
-<li><code>uv add flask</code>：安裝 Flask 依賴</li>
-</ul>
-<h2 id="Git-版本控制初始化"><a href="#Git-版本控制初始化" class="headerlink" title="Git 版本控制初始化"></a>Git 版本控制初始化</h2><ul>
-<li><code>git add -A &amp; git commit -m &quot;Initial commit&quot;</code>：<ul>
-<li>將專案加入版本控制並提交初始版本</li>
-</ul>
-</li>
-</ul>
-<h2 id="第一個-Hello-World-應用程式"><a href="#第一個-Hello-World-應用程式" class="headerlink" title="第一個 Hello World 應用程式"></a>第一個 Hello World 應用程式</h2><ul>
-<li><p>新增一個 <code>app.py</code></p>
-  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&quot;/&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">hello</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;Hello, World!&quot;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>啟動伺服器：<br> <code>uv run flask run</code></p>
-</li>
-</ul>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-12-16T16:00:00.000Z" title="2025/12/17 上午12:00:00">2025-12-17</time>發表</span><span class="level-item"><time dateTime="2025-12-18T06:56:39.635Z" title="2025/12/18 下午2:56:39">2025-12-18</time>更新</span><span class="level-item"><a class="link-muted" href="/my_blog/categories/Learning-Plan/">Learning Plan</a></span><span class="level-item">8 分鐘讀完 (大約1161個字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/my_blog/2025/12/2025-12-17-learning-flask/">30 天學習 Flask 計畫 - Weather App</a></p><div class="content"><h2 id="專案概述"><a href="#專案概述" class="headerlink" title="專案概述"></a>專案概述</h2><p>專案目標：使用 Flask 建立一個功能完整的天氣應用程式，整合天氣 API、資料視覺化與用戶管理功能。</p>
+</blockquote></div><a class="article-more button is-small is-size-7" href="/my_blog/2025/12/2025-12-18-learning-flask-day-01/#more">繼續閱讀</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-12-16T16:00:00.000Z" title="2025/12/17 上午12:00:00">2025-12-17</time>發表</span><span class="level-item"><time dateTime="2025-12-18T06:56:39.635Z" title="2025/12/18 下午2:56:39">2025-12-18</time>更新</span><span class="level-item"><a class="link-muted" href="/my_blog/categories/Learning-Plan/">Learning Plan</a></span><span class="level-item">8 分鐘讀完 (大約1161個字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/my_blog/2025/12/2025-12-17-learning-flask/">30 天學習 Flask 計畫 - Weather App</a></p><div class="content"><h2 id="專案概述"><a href="#專案概述" class="headerlink" title="專案概述"></a>專案概述</h2><p>專案目標：使用 Flask 建立一個功能完整的天氣應用程式，整合天氣 API、資料視覺化與用戶管理功能。</p>
 <hr>
 <h2 id="第一週：基礎建立（Day-1-7）"><a href="#第一週：基礎建立（Day-1-7）" class="headerlink" title="第一週：基礎建立（Day 1-7）"></a>第一週：基礎建立（Day 1-7）</h2><h3 id="Day-1-2：環境設定與-uv-管理"><a href="#Day-1-2：環境設定與-uv-管理" class="headerlink" title="Day 1-2：環境設定與 uv 管理"></a>Day 1-2：環境設定與 uv 管理</h3><p><a href="/2025-12-18-learning-flask-day-01">詳細內容 →</a></p>
 <ul>
