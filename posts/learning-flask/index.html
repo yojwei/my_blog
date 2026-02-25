@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>30 天學習 Flask 計畫 - Weather App - 大昌的資訊筆記</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="大昌的資訊筆記"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="大昌的資訊筆記"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="專案概述專案目標：使用 Flask 建立一個功能完整的天氣應用程式，整合天氣 API、資料視覺化與用戶管理功能。  第一週：基礎建立（Day 1-7）Day 1 - 環境設定與 uv 管理詳細內容 →   使用 PowerShell 快速安裝 uv 建立 Flask 專案：uv init flask_demo --python 3.14 安裝 Flask 依賴：uv add flask 撰寫第一個"><meta property="og:type" content="blog"><meta property="og:title" content="30 天學習 Flask 計畫 - Weather App"><meta property="og:url" content="https://yojwei.com/posts/learning-flask/"><meta property="og:site_name" content="大昌的資訊筆記"><meta property="og:description" content="專案概述專案目標：使用 Flask 建立一個功能完整的天氣應用程式，整合天氣 API、資料視覺化與用戶管理功能。  第一週：基礎建立（Day 1-7）Day 1 - 環境設定與 uv 管理詳細內容 →   使用 PowerShell 快速安裝 uv 建立 Flask 專案：uv init flask_demo --python 3.14 安裝 Flask 依賴：uv add flask 撰寫第一個"><meta property="og:locale" content="zh_TW"><meta property="og:image" content="https://yojwei.com/img/og_image.png"><meta property="article:published_time" content="2025-12-16T16:00:00.000Z"><meta property="article:modified_time" content="2026-01-16T09:49:23.547Z"><meta property="article:author" content="大昌"><meta property="article:tag" content="Flask"><meta property="article:tag" content="Python"><meta property="article:tag" content="Web Development"><meta property="article:tag" content="Weather App"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://yojwei.com/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://yojwei.com/posts/learning-flask/"},"headline":"30 天學習 Flask 計畫 - Weather App","image":["https://yojwei.com/img/og_image.png"],"datePublished":"2025-12-16T16:00:00.000Z","dateModified":"2026-01-16T09:49:23.547Z","author":{"@type":"Person","name":"大昌"},"publisher":{"@type":"Organization","name":"大昌的資訊筆記","logo":{"@type":"ImageObject","url":"https://yojwei.com/img/logo.svg"}},"description":"專案概述專案目標：使用 Flask 建立一個功能完整的天氣應用程式，整合天氣 API、資料視覺化與用戶管理功能。  第一週：基礎建立（Day 1-7）Day 1 - 環境設定與 uv 管理詳細內容 →   使用 PowerShell 快速安裝 uv 建立 Flask 專案：uv init flask_demo --python 3.14 安裝 Flask 依賴：uv add flask 撰寫第一個"}</script><link rel="canonical" href="https://yojwei.com/posts/learning-flask/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="大昌的資訊筆記" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/contact">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yojwei"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜尋" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-12-16T16:00:00.000Z" title="2025/12/17 上午12:00:00">2025-12-17</time>發表</span><span class="level-item"><time dateTime="2026-01-16T09:49:23.547Z" title="2026/1/16 下午5:49:23">2026-01-16</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Learning-Plan/">Learning Plan</a></span><span class="level-item">14 分鐘讀完 (大約2057個字)</span></div></div><h1 class="title is-3 is-size-4-mobile">30 天學習 Flask 計畫 - Weather App</h1><div class="content"><h2 id="專案概述"><a href="#專案概述" class="headerlink" title="專案概述"></a>專案概述</h2><p>專案目標：使用 Flask 建立一個功能完整的天氣應用程式，整合天氣 API、資料視覺化與用戶管理功能。</p>
+<hr>
+<h2 id="第一週：基礎建立（Day-1-7）"><a href="#第一週：基礎建立（Day-1-7）" class="headerlink" title="第一週：基礎建立（Day 1-7）"></a>第一週：基礎建立（Day 1-7）</h2><h3 id="Day-1-環境設定與-uv-管理"><a href="#Day-1-環境設定與-uv-管理" class="headerlink" title="Day 1 - 環境設定與 uv 管理"></a>Day 1 - 環境設定與 uv 管理</h3><a href="/posts/learning-flask-day-01/" title="Day 01 - 環境設定與 uv 管理">詳細內容 →</a>
+
+<ul>
+<li>使用 PowerShell 快速安裝 uv</li>
+<li>建立 Flask 專案：<code>uv init flask_demo --python 3.14</code></li>
+<li>安裝 Flask 依賴：<code>uv add flask</code></li>
+<li>撰寫第一個 Hello World 應用程式</li>
+<li>Git 版本控制初始化</li>
+</ul>
+<h3 id="Day-2-建立基本-Flask-Layout"><a href="#Day-2-建立基本-Flask-Layout" class="headerlink" title="Day 2 - 建立基本 Flask Layout"></a>Day 2 - 建立基本 Flask Layout</h3><a href="/posts/learning-flask-day-02/" title="Day 02 - 建立基本 Flask Layout">詳細內容 →</a>
+
+<ul>
+<li>設定環境變數管理（python-dotenv）</li>
+<li>建立 Application Factory 模式</li>
+<li>專案結構組織：<ul>
+<li><code>flask_weather/</code> 應用程式主套件</li>
+<li><code>routes/</code> 路由模組</li>
+<li><code>templates/</code> Jinja2 模板</li>
+<li><code>static/</code> CSS 樣式檔</li>
+<li><code>tests/</code> 測試模組</li>
+</ul>
+</li>
+<li>配置管理模組設定</li>
+</ul>
+<h3 id="Day-3：路由與請求處理"><a href="#Day-3：路由與請求處理" class="headerlink" title="Day 3：路由與請求處理"></a>Day 3：路由與請求處理</h3><a href="/posts/learning-flask-day-03/" title="Day 03 - 路由與請求處理 (Routing &amp; Request Handling)">詳細內容 →</a>
+
+<ul>
+<li>URL 路由基礎：使用 <code>@app.route()</code> 裝飾器定義路由</li>
+<li>HTTP 方法（GET、POST）：處理表單提交與資料取得</li>
+<li>請求物件（Request Object）<ul>
+<li><code>request.args</code>：URL 查詢參數</li>
+<li><code>request.form</code>：表單內容</li>
+<li><code>request.method</code>：請求方法判斷</li>
+</ul>
+</li>
+<li>動態路由參數：<code>/api/weather/&lt;city&gt;</code> 語法</li>
+<li>錯誤處理：<code>@app.errorhandler()</code> 自定義 404、500 頁面</li>
+</ul>
+<h3 id="Day-4-藍圖系統與模組化-Blueprints-Modularity"><a href="#Day-4-藍圖系統與模組化-Blueprints-Modularity" class="headerlink" title="Day 4 - 藍圖系統與模組化 (Blueprints &amp; Modularity)"></a>Day 4 - 藍圖系統與模組化 (Blueprints &amp; Modularity)</h3><a href="/posts/learning-flask-day-04/" title="Day 04 - 藍圖系統與模組化 (Blueprints &amp; Modularity)">詳細內容 →</a>
+
+<ul>
+<li>藍圖 (Blueprint) 基本概念：分離關注點、提升可複用性</li>
+<li>專案結構升級：<ul>
+<li><code>main/</code> - 主要頁面模組</li>
+<li><code>weather/</code> - 天氣功能模組</li>
+<li><code>auth/</code> - 用戶認證模組（後續開發）</li>
+</ul>
+</li>
+<li>藍圖實作：<ul>
+<li>建立藍圖物件：<code>Blueprint(&#39;name&#39;, __name__)</code></li>
+<li>定義藍圖路由：<code>@bp.route()</code></li>
+<li>註冊藍圖：<code>app.register_blueprint()</code></li>
+</ul>
+</li>
+<li>URL 前綴與動態前綴：使用 <code>url_prefix</code> 參數</li>
+<li>路由分類與整合：<ul>
+<li>首頁路由 → <code>main</code> 模組</li>
+<li>天氣查詢路由 → <code>weather</code> 模組（前綴 <code>/weather</code>）</li>
+</ul>
+</li>
+<li>更新 Application Factory：在 <code>create_app()</code> 中註冊所有藍圖</li>
+<li>避免循環引用問題</li>
+<li>藍圖中的靜態檔案與模板配置</li>
+</ul>
+<h3 id="Day-5-模板引擎-Jinja2-基礎"><a href="#Day-5-模板引擎-Jinja2-基礎" class="headerlink" title="Day 5 - 模板引擎 Jinja2 基礎"></a>Day 5 - 模板引擎 Jinja2 基礎</h3><a href="/posts/learning-flask-day-05/" title="Day 05 - 模板引擎 Jinja2 基礎">詳細內容 →</a>
+
+<ul>
+<li>模板基礎語法 (Variables, Filters, Control Structures)</li>
+<li>建立基礎模板 (<code>base.html</code>) 與繼承機制</li>
+<li>整合 Tailwind CSS</li>
+</ul>
+<h3 id="Day-6-頁面設計與實作"><a href="#Day-6-頁面設計與實作" class="headerlink" title="Day 6 - 頁面設計與實作"></a>Day 6 - 頁面設計與實作</h3><a href="/posts/learning-flask-day-06/" title="Day 06 - 頁面設計與實作">詳細內容 →</a>
+
+<ul>
+<li>首頁模板設計 (<code>index.html</code>)</li>
+<li>天氣顯示卡片設計</li>
+<li>靜態檔案 (Static Files) 管理</li>
+</ul>
+<h3 id="Day-7-表單處理"><a href="#Day-7-表單處理" class="headerlink" title="Day 7 - 表單處理"></a>Day 7 - 表單處理</h3><a href="/posts/learning-flask-day-07/" title="Day 07 - 表單處理與驗證 (Flask-WTF)">詳細內容 →</a>
+
+<ul>
+<li>城市搜尋表單設計</li>
+<li>Flask-WTF 表單驗證</li>
+<li>CSRF 保護機制</li>
+<li>輸入驗證與錯誤訊息顯示 (<code>flash</code> messages)</li>
+</ul>
+<hr>
+<span id="more"></span>
+
+<h2 id="第二週：API-整合與資料處理（Day-8-14）"><a href="#第二週：API-整合與資料處理（Day-8-14）" class="headerlink" title="第二週：API 整合與資料處理（Day 8-14）"></a>第二週：API 整合與資料處理（Day 8-14）</h2><h3 id="Day-8-天氣-API-整合基礎"><a href="#Day-8-天氣-API-整合基礎" class="headerlink" title="Day 8 - 天氣 API 整合基礎"></a>Day 8 - 天氣 API 整合基礎</h3><a href="/posts/learning-flask-day-08/" title="Day 08 - 天氣 API 整合基礎">詳細內容 →</a>
+
+<ul>
+<li>註冊 OpenWeatherMap API</li>
+<li>API 金鑰管理（<code>.env</code>）</li>
+<li>使用 <code>requests</code> 套件發送請求</li>
+<li>解析 JSON 回應資料</li>
+</ul>
+<h3 id="Day-9-API-資料處理與錯誤控管"><a href="#Day-9-API-資料處理與錯誤控管" class="headerlink" title="Day 9 - API 資料處理與錯誤控管"></a>Day 9 - API 資料處理與錯誤控管</h3><a href="/posts/learning-flask-day-09/" title="Day 09 - API 資料處理與錯誤控管">詳細內容 →</a>
+
+<ul>
+<li>封裝 API 呼叫邏輯</li>
+<li>處理 API 錯誤（401, 404, Rate Limit）</li>
+<li>資料格式化與單位轉換</li>
+</ul>
+<h3 id="Day-10-資料庫設定與-ORM"><a href="#Day-10-資料庫設定與-ORM" class="headerlink" title="Day 10 - 資料庫設定與 ORM"></a>Day 10 - 資料庫設定與 ORM</h3><a href="/posts/learning-flask-day-10/" title="Day 10 - 資料庫設定與 ORM (SQLAlchemy)">詳細內容 →</a>
+
+<ul>
+<li>SQLite 資料庫配置</li>
+<li>Flask-SQLAlchemy 初始化</li>
+<li>定義 User 資料模型</li>
+</ul>
+<h3 id="Day-11-資料模型與遷移"><a href="#Day-11-資料模型與遷移" class="headerlink" title="Day 11 - 資料模型與遷移"></a>Day 11 - 資料模型與遷移</h3><a href="/posts/learning-flask-day-11/" title="Day 11 - 資料模型與遷移 (Flask-Migrate)">詳細內容 →</a>
+
+<ul>
+<li>Flask-Migrate 安裝與設定</li>
+<li>定義 SavedCity 模型與一對多關聯 (User ↔ SavedCity)</li>
+<li>定義 SearchHistory 模型 (追蹤用戶搜尋記錄)</li>
+<li>資料庫遷移流程：<ul>
+<li><code>flask db init</code> - 初始化遷移儲存庫</li>
+<li><code>flask db migrate</code> - 產生遷移腳本</li>
+<li><code>flask db upgrade</code> - 套用變更至資料庫</li>
+</ul>
+</li>
+<li>測試模型關聯查詢功能</li>
+</ul>
+<h3 id="Day-12-用戶註冊功能"><a href="#Day-12-用戶註冊功能" class="headerlink" title="Day 12 - 用戶註冊功能"></a>Day 12 - 用戶註冊功能</h3><a href="/posts/learning-flask-day-12/" title="Day 12 - 用戶註冊功能">詳細內容 →</a>
+
+<ul>
+<li>密碼安全性與雜湊處理：<ul>
+<li>使用 <code>werkzeug.security.generate_password_hash()</code> 加密密碼</li>
+<li>實作 <code>User.set_password()</code> 與 <code>check_password()</code> 方法</li>
+<li>絕不儲存明文密碼</li>
+</ul>
+</li>
+<li>建立 Auth 藍圖：<ul>
+<li>建立 <code>flask_weather/auth/</code> 模組</li>
+<li>註冊 auth 藍圖至應用程式（URL 前綴：<code>/auth</code>）</li>
+</ul>
+</li>
+<li>註冊表單設計 (Flask-WTF)：<ul>
+<li>欄位：username, email, password, confirm_password</li>
+<li>內建驗證器：<code>DataRequired()</code>, <code>Email()</code>, <code>EqualTo()</code></li>
+<li>自定義驗證：<code>validate_username()</code> 與 <code>validate_email()</code></li>
+<li>檢查使用者名稱與 Email 是否已存在</li>
+</ul>
+</li>
+<li>註冊路由實作 (<code>/auth/register</code>)：<ul>
+<li>處理 GET 與 POST 請求</li>
+<li>表單驗證與錯誤處理</li>
+<li>將新用戶寫入資料庫</li>
+<li>使用 Flash Messages 顯示成功訊息</li>
+</ul>
+</li>
+<li>註冊頁面模板 (<code>templates/auth/register.html</code>)：<ul>
+<li>表單欄位渲染與錯誤訊息顯示</li>
+<li>Bootstrap 5 樣式美化</li>
+<li>CSRF 保護（<code>form.hidden_tag()</code>）</li>
+</ul>
+</li>
+</ul>
+<h3 id="Day-13-用戶登入與-Session"><a href="#Day-13-用戶登入與-Session" class="headerlink" title="Day 13 - 用戶登入與 Session"></a>Day 13 - 用戶登入與 Session</h3><a href="/posts/learning-flask-day-13/" title="Day 13 - 用戶登入與 Session (Flask-Login)">詳細內容 →</a>
+
+<ul>
+<li>登入表單設計</li>
+<li>Flask-Login 整合</li>
+<li>Session 管理與 User Loader</li>
+<li>登出功能</li>
+</ul>
+<h3 id="Day-14-資料快取機制"><a href="#Day-14-資料快取機制" class="headerlink" title="Day 14 - 資料快取機制"></a>Day 14 - 資料快取機制</h3><a href="/posts/learning-flask-day-14/" title="Day 14 - 資料快取機制 (Flask-Caching)">詳細內容 →</a>
+
+<ul>
+<li>Flask-Caching 設定</li>
+<li>API 回應快取策略</li>
+<li>減少外部 API 呼叫次數</li>
+</ul>
+<hr>
+<h2 id="第三週：Weather-App-核心功能開發（Day-15-21）"><a href="#第三週：Weather-App-核心功能開發（Day-15-21）" class="headerlink" title="第三週：Weather App 核心功能開發（Day 15-21）"></a>第三週：Weather App 核心功能開發（Day 15-21）</h2><h3 id="Day-15-天氣查詢功能實作"><a href="#Day-15-天氣查詢功能實作" class="headerlink" title="Day 15 - 天氣查詢功能實作"></a>Day 15 - 天氣查詢功能實作</h3><a href="/posts/learning-flask-day-15/" title="Day 15 - 天氣查詢功能實作 (UI&#x2F;UX 整合)">詳細內容 →</a>
+
+<ul>
+<li>整合前端表單與後端 API</li>
+<li>顯示當前天氣資訊（溫度、濕度、風速）</li>
+<li>天氣圖示對應</li>
+</ul>
+<h3 id="Day-16-進階查詢功能"><a href="#Day-16-進階查詢功能" class="headerlink" title="Day 16 - 進階查詢功能"></a>Day 16 - 進階查詢功能</h3><a href="/posts/learning-flask-day-16/" title="Day 16 - 進階查詢功能 (Geolocation &amp; Units)">詳細內容 →</a>
+
+<ul>
+<li>攝氏&#x2F;華氏溫度切換邏輯</li>
+<li>地理定位整合 (Geolocation API)</li>
+<li>根據座標查詢天氣</li>
+</ul>
+<h3 id="Day-17-多日天氣預報-API"><a href="#Day-17-多日天氣預報-API" class="headerlink" title="Day 17 - 多日天氣預報 API"></a>Day 17 - 多日天氣預報 API</h3><a href="/posts/learning-flask-day-17/" title="Day 17 - 多日天氣預報 API">詳細內容 →</a>
+
+<ul>
+<li>整合 5 Day &#x2F; 3 Hour Forecast API</li>
+<li>預報資料結構解析</li>
+<li>資料分組與處理</li>
+</ul>
+<h3 id="Day-18-預報資料視覺化"><a href="#Day-18-預報資料視覺化" class="headerlink" title="Day 18 - 預報資料視覺化"></a>Day 18 - 預報資料視覺化</h3><a href="/posts/learning-flask-day-18/" title="Day 18 - 預報資料視覺化 (Chart.js)">詳細內容 →</a>
+
+<ul>
+<li>整合 Chart.js</li>
+<li>繪製溫度趨勢圖</li>
+<li>繪製降雨機率圖</li>
+</ul>
+<h3 id="Day-19-收藏城市功能"><a href="#Day-19-收藏城市功能" class="headerlink" title="Day 19 - 收藏城市功能"></a>Day 19 - 收藏城市功能</h3><a href="/posts/learning-flask-day-19/" title="Day 19 - 收藏城市功能">詳細內容 →</a>
+
+<ul>
+<li>收藏&#x2F;取消收藏 API</li>
+<li>資料庫關聯操作</li>
+<li>限制未登入用戶權限</li>
+</ul>
+<h3 id="Day-20-收藏清單管理"><a href="#Day-20-收藏清單管理" class="headerlink" title="Day 20 - 收藏清單管理"></a>Day 20 - 收藏清單管理</h3><a href="/posts/learning-flask-day-20/" title="Day 20 - 收藏清單管理 (Dashboard)">詳細內容 →</a>
+
+<ul>
+<li>顯示用戶收藏城市列表</li>
+<li>批次查詢收藏城市天氣</li>
+<li>搜尋歷史記錄顯示</li>
+</ul>
+<h3 id="Day-21-進階天氣資訊"><a href="#Day-21-進階天氣資訊" class="headerlink" title="Day 21 - 進階天氣資訊"></a>Day 21 - 進階天氣資訊</h3><a href="/posts/learning-flask-day-21/" title="Day 21 - 進階天氣資訊 (AQI &amp; UV)">詳細內容 →</a>
+
+<ul>
+<li>空氣品質指數 (AQI) 整合</li>
+<li>日出日落時間計算與顯示</li>
+<li>UV 指數與體感溫度</li>
+</ul>
+<hr>
+<h2 id="第四週：優化與部署（Day-22-30）"><a href="#第四週：優化與部署（Day-22-30）" class="headerlink" title="第四週：優化與部署（Day 22-30）"></a>第四週：優化與部署（Day 22-30）</h2><h3 id="Day-22-前端互動優化"><a href="#Day-22-前端互動優化" class="headerlink" title="Day 22 - 前端互動優化"></a>Day 22 - 前端互動優化</h3><a href="/posts/learning-flask-day-22/" title="Day 22 - 前端互動優化 (Alpine.js)">詳細內容 →</a>
+
+<ul>
+<li>響應式設計 (RWD) 調整</li>
+<li>使用 Alpine.js 處理前端互動</li>
+<li>載入動畫 (Loading Spinners)</li>
+</ul>
+<h3 id="Day-23-使用者體驗提升"><a href="#Day-23-使用者體驗提升" class="headerlink" title="Day 23 - 使用者體驗提升"></a>Day 23 - 使用者體驗提升</h3><a href="/posts/learning-flask-day-23/" title="Day 23 - 使用者體驗提升 (Dark Mode &amp; PWA)">詳細內容 →</a>
+
+<ul>
+<li>深色模式 (Dark Mode) 支援</li>
+<li>天氣背景動態變化</li>
+<li>PWA 基礎配置 (manifest.json)</li>
+</ul>
+<h3 id="Day-24-安全性強化"><a href="#Day-24-安全性強化" class="headerlink" title="Day 24 - 安全性強化"></a>Day 24 - 安全性強化</h3><a href="/posts/learning-flask-day-24/" title="Day 24 - 安全性強化 (Security)">詳細內容 →</a>
+
+<ul>
+<li>SQL Injection 防護檢查</li>
+<li>XSS 防護 (Jinja2 Autoescaping)</li>
+<li>API 請求限流 (Flask-Limiter)</li>
+</ul>
+<h3 id="Day-25-效能優化"><a href="#Day-25-效能優化" class="headerlink" title="Day 25 - 效能優化"></a>Day 25 - 效能優化</h3><a href="/posts/learning-flask-day-25/" title="Day 25 - 效能優化 (Performance)">詳細內容 →</a>
+
+<ul>
+<li>資料庫查詢優化 (N+1 問題)</li>
+<li>靜態資源壓縮與快取</li>
+<li>分頁功能實作</li>
+</ul>
+<h3 id="Day-26-單元測試"><a href="#Day-26-單元測試" class="headerlink" title="Day 26 - 單元測試"></a>Day 26 - 單元測試</h3><a href="/posts/learning-flask-day-26/" title="Day 26 - 單元測試 (Unit Testing)">詳細內容 →</a>
+
+<ul>
+<li>設定 pytest 環境</li>
+<li>撰寫 Model 單元測試</li>
+<li>測試 Helper Functions</li>
+</ul>
+<h3 id="Day-27-整合測試"><a href="#Day-27-整合測試" class="headerlink" title="Day 27 - 整合測試"></a>Day 27 - 整合測試</h3><a href="/posts/learning-flask-day-27/" title="learning-flask-day-27">詳細內容 →</a>
+
+<ul>
+<li>API 路由測試</li>
+<li>表單提交測試</li>
+<li>測試覆蓋率報告</li>
+</ul>
+<h3 id="Day-28-Docker-容器化"><a href="#Day-28-Docker-容器化" class="headerlink" title="Day 28 - Docker 容器化"></a>Day 28 - Docker 容器化</h3><a href="/posts/learning-flask-day-28/" title="Day 28 - Docker 容器化">詳細內容 →</a>
+
+<ul>
+<li>撰寫 Dockerfile</li>
+<li>設定 docker-compose.yml</li>
+<li>容器環境變數配置</li>
+</ul>
+<h3 id="Day-29-雲端部署準備"><a href="#Day-29-雲端部署準備" class="headerlink" title="Day 29 - 雲端部署準備"></a>Day 29 - 雲端部署準備</h3><ul>
+<li>選擇部署平台 (Render&#x2F;Railway)</li>
+<li>PostgreSQL 資料庫遷移設定</li>
+<li>Gunicorn WSGI Server 設定</li>
+</ul>
+<h3 id="Day-30-最終部署與文件"><a href="#Day-30-最終部署與文件" class="headerlink" title="Day 30 - 最終部署與文件"></a>Day 30 - 最終部署與文件</h3><ul>
+<li>部署至雲端平台</li>
+<li>設定 HTTPS 與網域</li>
+<li>撰寫最終 README.md 與 API 文件</li>
+</ul>
+<hr>
+<h2 id="Weather-App-功能清單"><a href="#Weather-App-功能清單" class="headerlink" title="Weather App 功能清單"></a>Weather App 功能清單</h2><h3 id="核心功能"><a href="#核心功能" class="headerlink" title="核心功能"></a>核心功能</h3><ul>
+<li>✅ 城市天氣查詢</li>
+<li>✅ 5 天天氣預報</li>
+<li>✅ 溫度單位切換</li>
+<li>✅ 天氣視覺化圖表</li>
+<li>✅ 用戶註冊&#x2F;登入</li>
+<li>✅ 收藏城市管理</li>
+<li>✅ 搜尋歷史</li>
+</ul>
+<h3 id="進階功能"><a href="#進階功能" class="headerlink" title="進階功能"></a>進階功能</h3><ul>
+<li>✅ 空氣品質指數</li>
+<li>✅ 天氣警報</li>
+<li>✅ 響應式設計</li>
+<li>✅ 深色模式</li>
+<li>✅ API 快取機制</li>
+</ul>
+<hr>
+<h2 id="使用技術棧"><a href="#使用技術棧" class="headerlink" title="使用技術棧"></a>使用技術棧</h2><h3 id="後端"><a href="#後端" class="headerlink" title="後端"></a>後端</h3><ul>
+<li><strong>Python 3.11+</strong></li>
+<li><strong>Flask</strong> - Web 框架</li>
+<li><strong>Flask-SQLAlchemy</strong> - ORM</li>
+<li><strong>Flask-Login</strong> - 認證</li>
+<li><strong>Flask-WTF</strong> - 表單處理</li>
+<li><strong>Flask-Migrate</strong> - 資料庫遷移</li>
+<li><strong>Flask-Caching</strong> - 快取</li>
+<li><strong>uv</strong> - 套件管理</li>
+</ul>
+<h3 id="前端"><a href="#前端" class="headerlink" title="前端"></a>前端</h3><ul>
+<li><strong>Jinja2</strong> - 模板引擎</li>
+<li><strong>Tailwind CSS</strong></li>
+<li><strong>Chart.js</strong> - 圖表</li>
+<li><strong>Alpine.js</strong> - 輕量互動</li>
+</ul>
+<h3 id="資料庫"><a href="#資料庫" class="headerlink" title="資料庫"></a>資料庫</h3><ul>
+<li><strong>SQLite</strong> (開發)</li>
+<li><strong>PostgreSQL</strong> (正式環境)</li>
+</ul>
+<h3 id="API"><a href="#API" class="headerlink" title="API"></a>API</h3><ul>
+<li><strong>OpenWeatherMap API</strong></li>
+<li><strong>Geolocation API</strong></li>
+</ul>
+<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><ul>
+<li><strong>Docker</strong></li>
+<li><strong>Gunicorn</strong></li>
+<li><strong>Nginx</strong></li>
+<li><strong>Render&#x2F;Railway</strong></li>
+</ul>
+<hr>
+<h2 id="學習資源"><a href="#學習資源" class="headerlink" title="學習資源"></a>學習資源</h2><h3 id="官方文件"><a href="#官方文件" class="headerlink" title="官方文件"></a>官方文件</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://flask.palletsprojects.com/">Flask Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://openweathermap.org/api">OpenWeatherMap API</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/astral-sh/uv">uv Documentation</a></li>
+</ul>
+<h3 id="推薦教學"><a href="#推薦教學" class="headerlink" title="推薦教學"></a>推薦教學</h3><ul>
+<li>Flask Mega-Tutorial</li>
+<li>Real Python Flask 系列</li>
+<li>Corey Schafer Flask 影片</li>
+</ul>
+<hr>
+<p><strong>開始日期</strong>：2025-12-17<br><strong>預計完成</strong>：2026-01-15<br><strong>每日時間</strong>：2-3 小時</p>
+<p>Let’s build something amazing! 🌤️</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>30 天學習 Flask 計畫 - Weather App</p><p><a href="https://yojwei.com/posts/learning-flask/">https://yojwei.com/posts/learning-flask/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>大昌</p></div></div><div class="level-item is-narrow"><div><h6>發表於</h6><p>2025-12-17</p></div></div><div class="level-item is-narrow"><div><h6>更新於</h6><p>2026-01-16</p></div></div><div class="level-item is-narrow"><div><h6>許可協議</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Flask/">Flask</a><a class="link-muted mr-2" rel="tag" href="/tags/Python/">Python</a><a class="link-muted mr-2" rel="tag" href="/tags/Web-Development/">Web Development</a><a class="link-muted mr-2" rel="tag" href="/tags/Weather-App/">Weather App</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/posts/learning-flask-day-01/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Day 01 - 環境設定與 uv 管理</span></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="大昌"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">大昌</p><p class="is-size-6 is-block">大昌的資訊筆記</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Taichung, Taiwan</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">31</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分類</p><a href="/categories/"><p class="title">1</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">標籤</p><a href="/tags/"><p class="title">6</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/yojwei" target="_blank" rel="me noopener">追蹤</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/yojwei"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分類</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Learning-Plan/"><span class="level-start"><span class="level-item">Learning Plan</span></span><span class="level-end"><span class="level-item tag">31</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-18T14:32:05.000Z">2026-01-18</time></p><p class="title"><a href="/posts/learning-flask-day-30/">Day 30 - 部署到 Zeabur 雲端平台</a></p><p class="categories"><a href="/categories/Learning-Plan/">Learning Plan</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-17T00:01:23.000Z">2026-01-17</time></p><p class="title"><a href="/posts/learning-flask-day-29/">Day 29-雲端部署準備 (PostgreSQL &amp; Gunicorn)</a></p><p class="categories"><a href="/categories/Learning-Plan/">Learning Plan</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-16T02:20:23.000Z">2026-01-16</time></p><p class="title"><a href="/posts/learning-flask-day-28/">Day 28 - Docker 容器化</a></p><p class="categories"><a href="/categories/Learning-Plan/">Learning Plan</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-14T03:03:36.000Z">2026-01-14</time></p><p class="title"><a href="/posts/learning-flask-day-27/">learning-flask-day-27</a></p><p class="categories"><a href="/categories/Learning-Plan/">Learning Plan</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-13T02:57:02.000Z">2026-01-13</time></p><p class="title"><a href="/posts/learning-flask-day-26/">Day 26 - 單元測試 (Unit Testing)</a></p><p class="categories"><a href="/categories/Learning-Plan/">Learning Plan</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">彙整</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2026/01/"><span class="level-start"><span class="level-item">一月 2026</span></span><span class="level-end"><span class="level-item tag">17</span></span></a></li><li><a class="level is-mobile" href="/archives/2025/12/"><span class="level-start"><span class="level-item">十二月 2025</span></span><span class="level-end"><span class="level-item tag">14</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">標籤</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Deployment/"><span class="tag">Deployment</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Flask/"><span class="tag">Flask</span><span class="tag">31</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Python/"><span class="tag">Python</span><span class="tag">31</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Weather-App/"><span class="tag">Weather App</span><span class="tag">31</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Web-Development/"><span class="tag">Web Development</span><span class="tag">31</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Zeabur/"><span class="tag">Zeabur</span><span class="tag">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="大昌的資訊筆記" height="28"></a><p class="is-size-7"><span>&copy; 2026 大昌</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yojwei"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-tw");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到頁首" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此網站使用Cookie來改善您的體驗。",
+          dismiss: "知道了！",
+          allow: "允許使用Cookie",
+          deny: "拒絕",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="請輸入關鍵字..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script data-pjax src="/js/insight.js" defer></script><script data-pjax>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"請輸入關鍵字...","untitled":"(無標題)","posts":"文章","pages":"頁面","categories":"分類","tags":"標籤"});
+        });</script></body></html>
