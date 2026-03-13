@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>網站本地測試的臨時 HTTPS 方案 - mkcert - 大昌的資訊筆記</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="大昌的資訊筆記"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="大昌的資訊筆記"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="前言現代瀏覽器對 HTTPS 的要求越來越嚴格，許多 Web API（如 Camera、Geolocation、Service Worker）只有在 HTTPS 環境下才能正常運作。在本地開發時，若直接使用自簽憑證，瀏覽器會跳出安全警告，操作上十分不便。 mkcert 是一個零設定的本地 CA 工具，可以在本機建立受作業系統與瀏覽器信任的 SSL 憑證，讓開發時的 HTTPS 體驗與正式環境一致。"><meta property="og:type" content="blog"><meta property="og:title" content="網站本地測試的臨時 HTTPS 方案 - mkcert"><meta property="og:url" content="https://yojwei.com/posts/local-https-with-mkcert/"><meta property="og:site_name" content="大昌的資訊筆記"><meta property="og:description" content="前言現代瀏覽器對 HTTPS 的要求越來越嚴格，許多 Web API（如 Camera、Geolocation、Service Worker）只有在 HTTPS 環境下才能正常運作。在本地開發時，若直接使用自簽憑證，瀏覽器會跳出安全警告，操作上十分不便。 mkcert 是一個零設定的本地 CA 工具，可以在本機建立受作業系統與瀏覽器信任的 SSL 憑證，讓開發時的 HTTPS 體驗與正式環境一致。"><meta property="og:locale" content="zh_TW"><meta property="og:image" content="https://yojwei.com/img/og_image.png"><meta property="article:published_time" content="2026-03-13T02:32:01.000Z"><meta property="article:modified_time" content="2026-03-13T05:01:19.238Z"><meta property="article:author" content="大昌"><meta property="article:tag" content="mkcert"><meta property="article:tag" content="tools"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://yojwei.com/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://yojwei.com/posts/local-https-with-mkcert/"},"headline":"網站本地測試的臨時 HTTPS 方案 - mkcert","image":["https://yojwei.com/img/og_image.png"],"datePublished":"2026-03-13T02:32:01.000Z","dateModified":"2026-03-13T05:01:19.238Z","author":{"@type":"Person","name":"大昌"},"publisher":{"@type":"Organization","name":"大昌的資訊筆記","logo":{"@type":"ImageObject","url":"https://yojwei.com/img/logo.svg"}},"description":"前言現代瀏覽器對 HTTPS 的要求越來越嚴格，許多 Web API（如 Camera、Geolocation、Service Worker）只有在 HTTPS 環境下才能正常運作。在本地開發時，若直接使用自簽憑證，瀏覽器會跳出安全警告，操作上十分不便。 mkcert 是一個零設定的本地 CA 工具，可以在本機建立受作業系統與瀏覽器信任的 SSL 憑證，讓開發時的 HTTPS 體驗與正式環境一致。"}</script><link rel="canonical" href="https://yojwei.com/posts/local-https-with-mkcert/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="大昌的資訊筆記" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/contact">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yojwei"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜尋" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2026-03-13T02:32:01.000Z" title="2026/3/13 上午10:32:01">2026-03-13</time>發表</span><span class="level-item"><time dateTime="2026-03-13T05:01:19.238Z" title="2026/3/13 下午1:01:19">2026-03-13</time>更新</span><span class="level-item">6 分鐘讀完 (大約871個字)</span></div></div><h1 class="title is-3 is-size-4-mobile">網站本地測試的臨時 HTTPS 方案 - mkcert</h1><div class="content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>現代瀏覽器對 HTTPS 的要求越來越嚴格，許多 Web API（如 Camera、Geolocation、Service Worker）只有在 HTTPS 環境下才能正常運作。在本地開發時，若直接使用自簽憑證，瀏覽器會跳出安全警告，操作上十分不便。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/FiloSottile/mkcert">mkcert</a> 是一個零設定的本地 CA 工具，可以在本機建立受作業系統與瀏覽器信任的 SSL 憑證，讓開發時的 HTTPS 體驗與正式環境一致。</p>
+<blockquote>
+<p><strong>適用情境</strong>：僅限本地開發與測試使用，請勿將產生的憑證部署至正式環境。</p>
+</blockquote>
+<hr>
+<h2 id="安裝-mkcert"><a href="#安裝-mkcert" class="headerlink" title="安裝 mkcert"></a>安裝 mkcert</h2><h3 id="Windows（使用-Chocolatey）"><a href="#Windows（使用-Chocolatey）" class="headerlink" title="Windows（使用 Chocolatey）"></a>Windows（使用 Chocolatey）</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">choco install mkcert</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>若尚未安裝 Chocolatey，請參考 <a target="_blank" rel="noopener" href="https://chocolatey.org/install">官方安裝說明</a>。</p>
+</blockquote>
+<h3 id="macOS（使用-Homebrew）"><a href="#macOS（使用-Homebrew）" class="headerlink" title="macOS（使用 Homebrew）"></a>macOS（使用 Homebrew）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew install mkcert</span><br><span class="line">brew install nss  <span class="comment"># 若需要支援 Firefox</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先安裝 certutil（NSS 工具）</span></span><br><span class="line"><span class="built_in">sudo</span> apt install libnss3-tools  <span class="comment"># Debian / Ubuntu</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 再下載 mkcert 執行檔（請至 GitHub Releases 取得最新版本）</span></span><br><span class="line">curl -Lo mkcert https://github.com/FiloSottile/mkcert/releases/latest/download/mkcert-linux-amd64</span><br><span class="line"><span class="built_in">chmod</span> +x mkcert</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">mv</span> mkcert /usr/local/bin/</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="初始化本機-CA"><a href="#初始化本機-CA" class="headerlink" title="初始化本機 CA"></a>初始化本機 CA</h2><p>安裝完成後，<strong>必須先執行以下指令</strong>，將 mkcert 的根憑證安裝到系統與瀏覽器的信任清單中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkcert -install</span><br></pre></td></tr></table></figure>
+
+<p>此步驟只需執行一次。之後由 mkcert 簽發的憑證，瀏覽器便不會再跳出警告。</p>
+<hr>
+<h2 id="產生-SSL-憑證"><a href="#產生-SSL-憑證" class="headerlink" title="產生 SSL 憑證"></a>產生 SSL 憑證</h2><p>在終端機中執行以下指令，為開發用的網域一次性產生憑證：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkcert example.com <span class="string">&quot;*.example.com&quot;</span> example.test localhost 127.0.0.1 ::1</span><br></pre></td></tr></table></figure>
+
+<p>執行後會在當前目錄產生兩個檔案：</p>
+<table>
+<thead>
+<tr>
+<th>檔案</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>example.com+5.pem</code></td>
+<td>SSL 憑證（公鑰）</td>
+</tr>
+<tr>
+<td><code>example.com+5-key.pem</code></td>
+<td>私鑰（請妥善保管，勿公開）</td>
+</tr>
+</tbody></table>
+<h3 id="參數說明"><a href="#參數說明" class="headerlink" title="參數說明"></a>參數說明</h3><table>
+<thead>
+<tr>
+<th>參數</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>example.com</code></td>
+<td>主網域名稱</td>
+</tr>
+<tr>
+<td><code>&quot;*.example.com&quot;</code></td>
+<td>萬用字元，涵蓋所有子網域（如 <code>blog.example.com</code>）</td>
+</tr>
+<tr>
+<td><code>example.test</code></td>
+<td>自訂的測試用域名</td>
+</tr>
+<tr>
+<td><code>localhost</code></td>
+<td>本機主機名稱</td>
+</tr>
+<tr>
+<td><code>127.0.0.1</code></td>
+<td>IPv4 本機位址</td>
+</tr>
+<tr>
+<td><code>::1</code></td>
+<td>IPv6 本機位址</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="設定-VS-Code-Live-Server"><a href="#設定-VS-Code-Live-Server" class="headerlink" title="設定 VS Code Live Server"></a>設定 VS Code Live Server</h2><p>在 VS Code 的 <code>settings.json</code> 中加入以下設定，讓 Live Server 使用剛才產生的憑證：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;liveServer.settings.donotVerifyTags&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;liveServer.settings.donotShowInfoMsg&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;liveServer.settings.https&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;enable&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;cert&quot;</span><span class="punctuation">:</span> <span class="string">&quot;C:/Users/your-username/example.com+5.pem&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;key&quot;</span><span class="punctuation">:</span> <span class="string">&quot;C:/Users/your-username/example.com+5-key.pem&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意</strong>：請將路徑替換為你實際存放憑證檔案的位置。Windows 路徑可使用正斜線（<code>/</code>）或雙反斜線（<code>\\</code>）。</p>
+</blockquote>
+<h3 id="設定欄位說明"><a href="#設定欄位說明" class="headerlink" title="設定欄位說明"></a>設定欄位說明</h3><table>
+<thead>
+<tr>
+<th>設定項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>donotVerifyTags</code></td>
+<td>啟動時略過 HTML 標籤驗證</td>
+</tr>
+<tr>
+<td><code>donotShowInfoMsg</code></td>
+<td>隱藏 Live Server 的提示訊息</td>
+</tr>
+<tr>
+<td><code>https.enable</code></td>
+<td>啟用 HTTPS</td>
+</tr>
+<tr>
+<td><code>https.cert</code></td>
+<td>SSL 憑證檔案的完整路徑</td>
+</tr>
+<tr>
+<td><code>https.key</code></td>
+<td>私鑰檔案的完整路徑</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="常見問題"><a href="#常見問題" class="headerlink" title="常見問題"></a>常見問題</h2><p><strong>Q：瀏覽器仍然顯示「不安全」警告？</strong><br>確認是否已執行 <code>mkcert -install</code>，並重新啟動瀏覽器。若使用 Firefox，需額外安裝 <code>nss</code>（macOS）或 <code>libnss3-tools</code>（Linux）。</p>
+<p><strong>Q：憑證過期了怎麼辦？</strong><br>mkcert 預設產生的憑證有效期為 <strong>825 天</strong>。過期後重新執行產生憑證的指令即可，不需要重新執行 <code>mkcert -install</code>。</p>
+<p><strong>Q：可以用在 CI&#x2F;CD 環境嗎？</strong><br>不建議。mkcert 適合個人本地開發，CI 環境建議使用自動化憑證工具（如 Let’s Encrypt + staging 環境）。</p>
+<hr>
+<h2 id="參考來源"><a href="#參考來源" class="headerlink" title="參考來源"></a>參考來源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/FiloSottile/mkcert">mkcert GitHub</a></li>
+<li><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer">VS Code Live Server 擴充功能</a></li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>網站本地測試的臨時 HTTPS 方案 - mkcert</p><p><a href="https://yojwei.com/posts/local-https-with-mkcert/">https://yojwei.com/posts/local-https-with-mkcert/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>大昌</p></div></div><div class="level-item is-narrow"><div><h6>發表於</h6><p>2026-03-13</p></div></div><div class="level-item is-narrow"><div><h6>更新於</h6><p>2026-03-13</p></div></div><div class="level-item is-narrow"><div><h6>許可協議</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/mkcert/">mkcert</a><a class="link-muted mr-2" rel="tag" href="/tags/tools/">tools</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/posts/learning-flask-day-30/"><span class="level-item">Day 30 - 部署到 Zeabur 雲端平台</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="大昌"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">大昌</p><p class="is-size-6 is-block">大昌的資訊筆記</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Taichung, Taiwan</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">32</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分類</p><a href="/categories/"><p class="title">1</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">標籤</p><a href="/tags/"><p class="title">8</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/yojwei" target="_blank" rel="me noopener">追蹤</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/yojwei"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分類</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Learning-Plan/"><span class="level-start"><span class="level-item">Learning Plan</span></span><span class="level-end"><span class="level-item tag">31</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-03-13T02:32:01.000Z">2026-03-13</time></p><p class="title"><a href="/posts/local-https-with-mkcert/">網站本地測試的臨時 HTTPS 方案 - mkcert</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-18T14:32:05.000Z">2026-01-18</time></p><p class="title"><a href="/posts/learning-flask-day-30/">Day 30 - 部署到 Zeabur 雲端平台</a></p><p class="categories"><a href="/categories/Learning-Plan/">Learning Plan</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-17T00:01:23.000Z">2026-01-17</time></p><p class="title"><a href="/posts/learning-flask-day-29/">Day 29-雲端部署準備 (PostgreSQL &amp; Gunicorn)</a></p><p class="categories"><a href="/categories/Learning-Plan/">Learning Plan</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-16T02:20:23.000Z">2026-01-16</time></p><p class="title"><a href="/posts/learning-flask-day-28/">Day 28 - Docker 容器化</a></p><p class="categories"><a href="/categories/Learning-Plan/">Learning Plan</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-14T03:03:36.000Z">2026-01-14</time></p><p class="title"><a href="/posts/learning-flask-day-27/">learning-flask-day-27</a></p><p class="categories"><a href="/categories/Learning-Plan/">Learning Plan</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">彙整</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2026/03/"><span class="level-start"><span class="level-item">三月 2026</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2026/01/"><span class="level-start"><span class="level-item">一月 2026</span></span><span class="level-end"><span class="level-item tag">17</span></span></a></li><li><a class="level is-mobile" href="/archives/2025/12/"><span class="level-start"><span class="level-item">十二月 2025</span></span><span class="level-end"><span class="level-item tag">14</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">標籤</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Deployment/"><span class="tag">Deployment</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Flask/"><span class="tag">Flask</span><span class="tag">31</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Python/"><span class="tag">Python</span><span class="tag">31</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Weather-App/"><span class="tag">Weather App</span><span class="tag">31</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Web-Development/"><span class="tag">Web Development</span><span class="tag">31</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Zeabur/"><span class="tag">Zeabur</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/mkcert/"><span class="tag">mkcert</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/tools/"><span class="tag">tools</span><span class="tag">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="大昌的資訊筆記" height="28"></a><p class="is-size-7"><span>&copy; 2026 大昌</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yojwei"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-tw");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到頁首" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此網站使用Cookie來改善您的體驗。",
+          dismiss: "知道了！",
+          allow: "允許使用Cookie",
+          deny: "拒絕",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="請輸入關鍵字..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script data-pjax src="/js/insight.js" defer></script><script data-pjax>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"請輸入關鍵字...","untitled":"(無標題)","posts":"文章","pages":"頁面","categories":"分類","tags":"標籤"});
+        });</script></body></html>
